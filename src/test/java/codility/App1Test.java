@@ -18,7 +18,9 @@ public class App1Test {
     @Test
     public void testNumberOfTests() throws Exception {
         App1 a = new App1();
-        assertEquals(1024, a.numberOfTests(1, 4, 2));
-
+        System.out.println(a.maxPeopleCount(1, 3, 2));
+        System.out.println(a.maxPeopleCount(1, 4, 2));
+        System.out.println(a.maxPeopleCount(50, 1, 2));
+        System.out.println(a.maxPeopleCount(50, 2, 2));
     }
 }
