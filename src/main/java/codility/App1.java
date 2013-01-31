@@ -136,7 +136,7 @@ public class App1 {
 
         //System.out.print(equiList(new int[]{-7, 1, 5, 2, -4, 3, 0}));
 
-        System.out.println(sqrt(9));
+        //System.out.println(sqrt(9));
 
 
         //System.out.println(q_round_integers (372506));
