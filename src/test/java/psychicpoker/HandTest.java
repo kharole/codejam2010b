@@ -3,8 +3,6 @@ package psychicpoker;
 import org.apache.commons.lang.ArrayUtils;
 import org.junit.Test;
 
-import java.util.ArrayDeque;
-
 import static junit.framework.Assert.*;
 
 
@@ -36,11 +34,15 @@ public class HandTest {
 
     @Test
     public void isStraight() {
-        assertTrue(Hand.build("2C 3C 4C 5C 6C").isStraight());
         assertFalse(Hand.build("2C 2D 4C 5C 6C").isStraight());
-
-        assertTrue(Hand.build("TC JD QC KC AD").isStraight());
         assertFalse(Hand.build("TC JD QC 2C AD").isStraight());
+    }
+
+    @Test
+    public void straightHighestCard() {
+        assertEquals(new Card("5C"), Hand.build("2C 3C 4C 5C AC").getStraightHighestCard());
+        assertEquals(new Card("AD"), Hand.build("TC JD QC KC AD").getStraightHighestCard());
+        assertEquals(new Card("6C"), Hand.build("2C 3C 4C 5C 6C").getStraightHighestCard());
     }
 
     @Test

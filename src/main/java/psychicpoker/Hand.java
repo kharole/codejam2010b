@@ -15,6 +15,18 @@ public class Hand {
 
     public static final int HAND_SIZE = 5;
 
+    enum Category {
+        STRAIGHT_FLUSH,
+        FOUR_OF_A_KIND,
+        FULL_HOUSE,
+        FLUSH,
+        STRAIGHT,
+        THREE_OF_KIND,
+        TWO_PAIRS,
+        ONE_PAIR,
+        HIGHEST_CARD
+    }
+
     private Card[] cards;
 
     public static Hand build(String str) {
@@ -41,20 +53,43 @@ public class Hand {
     }
 
     public boolean isStraight() {
-        int[] faceValueOrders = new int[HAND_SIZE];
-        int i = 0;
-        for (Card card: cards) {
-            faceValueOrders[i++] = card.getFaceValue().getOrder();
+        return getStraightHighestCard() != null;
+    }
+
+    public Card getStraightHighestCard() {
+        Card[] aceHighCards = new Card[HAND_SIZE];
+        Card[] aceLowCards = new Card[HAND_SIZE];
+        for (int i=0; i<HAND_SIZE; i++) {
+            aceHighCards[i] = cards[i];
+            aceLowCards[i] = lowAceCopy(cards[i]);
         }
 
-        Arrays.sort(faceValueOrders);
+        Arrays.sort(aceHighCards);
+        Arrays.sort(aceLowCards);
 
-        boolean result = true;
-        for(i=0; i<faceValueOrders.length; i++) {
-            result = result && ((faceValueOrders[i] - i) == faceValueOrders[0]);
+        if(isStraightArray(aceHighCards))
+            return aceHighCards[HAND_SIZE - 1];
+        else if(isStraightArray(aceLowCards)) {
+            return aceLowCards[HAND_SIZE - 1];
+        } else {
+            return null;
         }
+    }
 
-        return result;
+    private Card lowAceCopy(Card card) {
+        if(card.getFaceValue() == Card.FaceValue.ACE) {
+            return new Card(Card.FaceValue.LOW_ACE, card.getSuit());
+        } else {
+            return card;
+        }
+    }
+
+    private boolean isStraightArray(Card[] cards) {
+        for(int i=0; i<cards.length; i++) {
+            if ((cards[i].getFaceValue().ordinal() - i) != cards[0].getFaceValue().ordinal())
+                return false;
+        }
+        return true;
     }
 
     public int[] groupByKind() {

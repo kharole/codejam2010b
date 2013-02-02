@@ -1,5 +1,9 @@
 package psychicpoker;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
+import java.util.Comparator;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Admin
@@ -11,26 +15,25 @@ public class Card implements Comparable<Card> {
 
     enum FaceValue {
 
-        _2("2", 0),
-        _3("3", 1),
-        _4("4", 2),
-        _5("5", 3),
-        _6("6", 4),
-        _7("7", 5),
-        _8("8", 6),
-        _9("9", 7),
-        _10("T", 8),
-        JACK("J", 9),
-        QUEEN("Q", 10),
-        KING("K", 11),
-        ACE("A", 12);
+        LOW_ACE(""),
+        TWO("2"),
+        THREE("3"),
+        FOUR("4"),
+        FIVE("5"),
+        SIX("6"),
+        SEVEN("7"),
+        EIGHT("8"),
+        NINE("9"),
+        TEN("T"),
+        JACK("J"),
+        QUEEN("Q"),
+        KING("K"),
+        ACE("A");
 
-        private final int order;
         private final String str;
 
-        FaceValue(String str, int order) {
+        FaceValue(String str) {
             this.str = str;
-            this.order = order;
         }
 
         public static FaceValue find(String str) {
@@ -46,14 +49,11 @@ public class Card implements Comparable<Card> {
             return str;
         }
 
-        public int getOrder() {
-            return order;
-        }
     };
 
     enum Suit {
 
-        C("CLUBS"), D("DIAMONDS"), H("HEARTS"), S("SPADES");
+        D("DIAMONDS"), C("CLUBS"), H("HEARTS"), S("SPADES");
 
         private final String descr;
 
@@ -61,6 +61,9 @@ public class Card implements Comparable<Card> {
             this.descr = descr;
         }
 
+        public String getDescr() {
+            return descr;
+        }
     }
 
     private FaceValue faceValue;
@@ -88,6 +91,24 @@ public class Card implements Comparable<Card> {
     }
 
     public int compareTo(Card card) {
-        return 0;
+        return this.getFaceValue().compareTo(card.getFaceValue());
+    }
+
+    public String toString() {
+        return faceValue.toString() + suit.toString();
+    }
+
+    public boolean equals(Object o) {
+        if(!(o instanceof Card))
+            return false;
+        if(o == null)
+            return false;
+        Card card = (Card)o;
+        return this.faceValue == card.faceValue && this.suit == card.suit;
+
+    }
+
+    public int hashCode() {
+        return new HashCodeBuilder().append(faceValue).append(suit).toHashCode();
     }
 }
