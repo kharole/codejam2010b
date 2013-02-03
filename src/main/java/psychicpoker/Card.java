@@ -1,6 +1,9 @@
 package psychicpoker;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import com.google.common.base.Objects;
+import com.google.common.collect.ComparisonChain;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Created with IntelliJ IDEA.
@@ -59,12 +62,11 @@ public class Card implements Comparable<Card> {
         }
     }
 
-    public static Card getInstance(String s) {
-        if (s.length() != 2)
-            throw new IllegalArgumentException();
+    public static Card valueOf(String str) {
+        checkArgument(str.length() == 2, "Invalid str length");
 
-        FaceValue faceValue = FaceValue.valueOfLabel(s.substring(0, 1));
-        Suit suit = Suit.valueOf(s.substring(1, 2));
+        FaceValue faceValue = FaceValue.valueOfLabel(str.substring(0, 1));
+        Suit suit = Suit.valueOf(str.substring(1, 2));
 
         return instances[faceValue.ordinal()][suit.ordinal()];
     }
@@ -86,24 +88,14 @@ public class Card implements Comparable<Card> {
     }
 
     public int compareTo(Card card) {
-        return this.getFaceValue().compareTo(card.getFaceValue());
+        return ComparisonChain.start().
+                compare(this.faceValue, card.faceValue).
+                compare(this.suit, card.suit).
+                result();
     }
 
     public String toString() {
-        return faceValue.getLabel() + suit.toString();
+        return faceValue.getLabel() + suit;
     }
 
-    public boolean equals(Object o) {
-        if(!(o instanceof Card))
-            return false;
-        if(o == null)
-            return false;
-        Card card = (Card)o;
-        return this.faceValue == card.faceValue && this.suit == card.suit;
-
-    }
-
-    public int hashCode() {
-        return new HashCodeBuilder().append(faceValue).append(suit).toHashCode();
-    }
 }

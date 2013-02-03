@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Admin
@@ -18,12 +20,11 @@ public class CombinationIterator<T> implements Iterator<Collection<T>> {
     private boolean hasNext = true;
 
     public CombinationIterator(T[] elements, int k) throws IllegalArgumentException {
+        checkArgument(k<=elements.length, "Impossible to select %d elements from hand of size %d", k, elements.length);
         this.indices = new int[k];
         for(int i=0; i<k; i++)
             indices[i] = k-1-i;
         this.elements = elements;
-        if(k>this.elements.length)
-            throw new IllegalArgumentException("Impossible to select " + k + " elements from hand of size " + this.elements.length);
     }
 
     public boolean hasNext() {
@@ -53,7 +54,7 @@ public class CombinationIterator<T> implements Iterator<Collection<T>> {
 
     public Collection<T> next() {
         Collection<T> result = new ArrayList<T>(indices.length);
-        for(int i=0; i<indices.length; i++) {
+        for(int i=indices.length-1; i>=0; i--) {
             result.add(elements[indices[i]]);
         }
         hasNext = inc();
