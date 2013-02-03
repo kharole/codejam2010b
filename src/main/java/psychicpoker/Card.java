@@ -2,8 +2,6 @@ package psychicpoker;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
-import java.util.Comparator;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Admin
@@ -15,7 +13,6 @@ public class Card implements Comparable<Card> {
 
     enum FaceValue {
 
-        LOW_ACE(""),
         TWO("2"),
         THREE("3"),
         FOUR("4"),
@@ -30,40 +27,46 @@ public class Card implements Comparable<Card> {
         KING("K"),
         ACE("A");
 
-        private final String str;
+        private final String label;
 
-        FaceValue(String str) {
-            this.str = str;
+        FaceValue(String label) {
+            this.label = label;
         }
 
-        public static FaceValue find(String str) {
+        public static FaceValue valueOfLabel(String label) {
             for(FaceValue faceValue: values()) {
-                if(faceValue.str.equals(str)) {
+                if(faceValue.label.equals(label)) {
                     return faceValue;
                 }
             }
             throw new IllegalArgumentException();
         }
 
-        public String toString() {
-            return str;
+        public String getLabel() {
+            return label;
         }
-
     };
 
-    enum Suit {
+    enum Suit { D, C, H, S; }
 
-        D("DIAMONDS"), C("CLUBS"), H("HEARTS"), S("SPADES");
+    private static Card[][] instances = new Card[FaceValue.values().length][Suit.values().length];
 
-        private final String descr;
-
-        Suit(String descr) {
-            this.descr = descr;
+    static {
+        for(FaceValue faceValue: FaceValue.values()) {
+            for(Suit suit: Suit.values()) {
+                instances[faceValue.ordinal()][suit.ordinal()] = new Card(faceValue, suit);
+            }
         }
+    }
 
-        public String getDescr() {
-            return descr;
-        }
+    public static Card getInstance(String s) {
+        if (s.length() != 2)
+            throw new IllegalArgumentException();
+
+        FaceValue faceValue = FaceValue.valueOfLabel(s.substring(0, 1));
+        Suit suit = Suit.valueOf(s.substring(1, 2));
+
+        return instances[faceValue.ordinal()][suit.ordinal()];
     }
 
     private FaceValue faceValue;
@@ -72,14 +75,6 @@ public class Card implements Comparable<Card> {
     public Card(FaceValue faceValue, Suit suit) {
         this.faceValue = faceValue;
         this.suit = suit;
-    }
-
-    public Card(String s) {
-        if (s.length() != 2)
-            throw new IllegalArgumentException();
-
-        this.faceValue = FaceValue.find(s.substring(0,1));
-        this.suit = Suit.valueOf(s.substring(1, 2));
     }
 
     public FaceValue getFaceValue() {
@@ -95,20 +90,6 @@ public class Card implements Comparable<Card> {
     }
 
     public String toString() {
-        return faceValue.toString() + suit.toString();
-    }
-
-    public boolean equals(Object o) {
-        if(!(o instanceof Card))
-            return false;
-        if(o == null)
-            return false;
-        Card card = (Card)o;
-        return this.faceValue == card.faceValue && this.suit == card.suit;
-
-    }
-
-    public int hashCode() {
-        return new HashCodeBuilder().append(faceValue).append(suit).toHashCode();
+        return faceValue.getLabel() + suit.toString();
     }
 }

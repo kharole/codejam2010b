@@ -7,6 +7,8 @@ package psychicpoker;
  * Time: 22:35
  * To change this template use File | Settings | File Templates.
  */
-public class Deck {
+public class Psychic {
+
+
 
 }

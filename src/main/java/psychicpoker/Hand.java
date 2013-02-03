@@ -32,16 +32,16 @@ public class Hand {
     public static Hand build(String str) {
         List<Card> cards = new ArrayList<Card>(HAND_SIZE);
         for (String s: str.split(" ")){
-            cards.add(new Card(s));
+            cards.add(Card.getInstance(s));
         }
         return new Hand(cards.toArray(new Card[] {}));
     }
 
-    public Hand(Card... cards) {
+    private Hand(Card... cards) {
         if(cards.length != HAND_SIZE)
             throw new IllegalArgumentException();
-
-        this.cards = cards;
+        this.cards = Arrays.copyOf(cards, HAND_SIZE);
+        Arrays.sort(this.cards);
     }
 
     public boolean isFlush() {
@@ -53,43 +53,24 @@ public class Hand {
     }
 
     public boolean isStraight() {
-        return getStraightHighestCard() != null;
+        return isAceHighStraight() || isAceLowStraight();
     }
 
-    public Card getStraightHighestCard() {
-        Card[] aceHighCards = new Card[HAND_SIZE];
-        Card[] aceLowCards = new Card[HAND_SIZE];
-        for (int i=0; i<HAND_SIZE; i++) {
-            aceHighCards[i] = cards[i];
-            aceLowCards[i] = lowAceCopy(cards[i]);
-        }
-
-        Arrays.sort(aceHighCards);
-        Arrays.sort(aceLowCards);
-
-        if(isStraightArray(aceHighCards))
-            return aceHighCards[HAND_SIZE - 1];
-        else if(isStraightArray(aceLowCards)) {
-            return aceLowCards[HAND_SIZE - 1];
-        } else {
-            return null;
-        }
-    }
-
-    private Card lowAceCopy(Card card) {
-        if(card.getFaceValue() == Card.FaceValue.ACE) {
-            return new Card(Card.FaceValue.LOW_ACE, card.getSuit());
-        } else {
-            return card;
-        }
-    }
-
-    private boolean isStraightArray(Card[] cards) {
+    private boolean isAceHighStraight() {
         for(int i=0; i<cards.length; i++) {
             if ((cards[i].getFaceValue().ordinal() - i) != cards[0].getFaceValue().ordinal())
                 return false;
         }
         return true;
+    }
+
+    private boolean isAceLowStraight() {
+        return cards[4].getFaceValue() == Card.FaceValue.ACE &&
+                cards[0].getFaceValue() == Card.FaceValue.TWO &&
+                cards[1].getFaceValue() == Card.FaceValue.THREE &&
+                cards[2].getFaceValue() == Card.FaceValue.FOUR &&
+                cards[3].getFaceValue() == Card.FaceValue.FIVE;
+
     }
 
     public int[] groupByKind() {
@@ -106,5 +87,31 @@ public class Hand {
         Arrays.sort(result);
         ArrayUtils.reverse(result);
         return result;
+    }
+
+    Category getCategory() {
+        if(isStraight() && isFlush()) {
+            return Category.STRAIGHT_FLUSH;
+        } else if (groupByKind()[0] == 4) {
+            return Category.FOUR_OF_A_KIND;
+        } else if (groupByKind()[0] == 3 && groupByKind()[1] == 2) {
+            return Category.FULL_HOUSE;
+        } else if(isFlush()) {
+            return Category.FLUSH;
+        } else if(isStraight()) {
+            return Category.STRAIGHT;
+        } else if(groupByKind()[0] == 3) {
+            return Category.THREE_OF_KIND;
+        } else if(groupByKind()[0] == 2 && groupByKind()[1] == 2) {
+            return Category.TWO_PAIRS;
+        } else if(groupByKind()[0] == 2) {
+            return Category.ONE_PAIR;
+        } else {
+            return Category.HIGHEST_CARD;
+        }
+    }
+
+    public Card[] getCards() {
+        return Arrays.copyOf(cards, HAND_SIZE);
     }
 }
