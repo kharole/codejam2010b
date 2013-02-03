@@ -92,4 +92,18 @@ public class Card implements Comparable<Card> {
     public String toString() {
         return faceValue.getLabel() + suit.toString();
     }
+
+    public boolean equals(Object o) {
+        if(!(o instanceof Card))
+            return false;
+        if(o == null)
+            return false;
+        Card card = (Card)o;
+        return this.faceValue == card.faceValue && this.suit == card.suit;
+
+    }
+
+    public int hashCode() {
+        return new HashCodeBuilder().append(faceValue).append(suit).toHashCode();
+    }
 }
