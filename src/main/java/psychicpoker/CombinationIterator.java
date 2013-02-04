@@ -3,6 +3,7 @@ package psychicpoker;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -16,11 +17,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 public class CombinationIterator<T> implements Iterator<Collection<T>> {
 
     private int[] indices;
-    private T[] elements;
+    private List<T> elements;
     private boolean hasNext = true;
 
-    public CombinationIterator(T[] elements, int k) throws IllegalArgumentException {
-        checkArgument(k<=elements.length, "Impossible to select %d elements from hand of size %d", k, elements.length);
+    public CombinationIterator(List<T> elements, int k) throws IllegalArgumentException {
+        checkArgument(k<=elements.size(), "Impossible to select %d elements from hand of size %d", k, elements.size());
         this.indices = new int[k];
         for(int i=0; i<k; i++)
             indices[i] = k-1-i;
@@ -45,7 +46,7 @@ public class CombinationIterator<T> implements Iterator<Collection<T>> {
 
     private boolean inc() {
         try {
-            inc(indices, elements.length - 1, 0);
+            inc(indices, elements.size() - 1, 0);
             return true;
         } catch (IllegalStateException e) {
             return false;
@@ -55,7 +56,7 @@ public class CombinationIterator<T> implements Iterator<Collection<T>> {
     public Collection<T> next() {
         Collection<T> result = new ArrayList<T>(indices.length);
         for(int i=indices.length-1; i>=0; i--) {
-            result.add(elements[indices[i]]);
+            result.add(elements.get(indices[i]));
         }
         hasNext = inc();
         return result;

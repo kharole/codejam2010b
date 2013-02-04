@@ -1,5 +1,7 @@
 package psychicpoker;
 
+import com.google.common.collect.*;
+
 import java.util.*;
 
 /**
@@ -11,16 +13,25 @@ import java.util.*;
  */
 public class Psychic {
 
-    public List<Hand> bestHands(String handStr, String deckStr) {
-        Card[] handCards = Hand.stringToCards(handStr);
-        Card[] deckCards = Hand.stringToCards(deckStr);
+    public static String analyze(String str) {
+        String handStr = str.substring(0, 14);
+        String deckStr = str.substring(15, 29);
+
+        Hand bestHand = Ordering.natural().max(getAllHands(handStr, deckStr));
+
+        return String.format("Hand: %s Deck: %s Best hand: %s", handStr, deckStr, bestHand.getCategory());
+    }
+
+    public static List<Hand> getAllHands(String handStr, String deckStr) {
+        List<Card> handCards = ImmutableList.copyOf(Hand.stringToCards(handStr));
+        List<Card> deckCards = ImmutableList.copyOf(Hand.stringToCards(deckStr));
 
         List<Hand> hands = new ArrayList<Hand>();
-        for(int i=0; i<Hand.HAND_SIZE; i++) {
-            for(Collection<Card> combination: createCombinations(handCards, Hand.HAND_SIZE - i)) {
+        for(int i=0; i<=Hand.HAND_SIZE; i++) {
+            for(Collection<Card> combination: combinations(handCards, Hand.HAND_SIZE - i)) {
                 List<Card> cards = new ArrayList<Card>(Hand.HAND_SIZE);
                 cards.addAll(combination);
-                cards.addAll(Arrays.asList(Arrays.copyOf(deckCards, i)));
+                cards.addAll(deckCards.subList(0, i));
                 Hand hand = new Hand(cards);
                 hands.add(hand);
             }
@@ -29,7 +40,7 @@ public class Psychic {
         return hands;
     }
 
-    public static <T> Iterable<Collection<T>> createCombinations(final T[] elements, final int k) {
+    public static <T> Iterable<Collection<T>> combinations(final List<T> elements, final int k) {
         return new Iterable<Collection<T>>() {
             public Iterator<Collection<T>> iterator() {
                 return new CombinationIterator<T>(elements, k);

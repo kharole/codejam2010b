@@ -1,9 +1,9 @@
 package psychicpoker;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Objects;
 import com.google.common.base.Splitter;
-import org.apache.commons.lang.ArrayUtils;
+import com.google.common.collect.*;
+import com.google.common.primitives.Ints;
 
 import java.util.*;
 
@@ -17,23 +17,29 @@ import static com.google.common.base.Preconditions.checkState;
  * Time: 23:18
  * To change this template use File | Settings | File Templates.
  */
-public class Hand {
+public class Hand implements Comparable<Hand> {
 
     public static final int HAND_SIZE = 5;
 
     enum Category {
-        STRAIGHT_FLUSH,
-        FOUR_OF_A_KIND,
-        FULL_HOUSE,
-        FLUSH,
-        STRAIGHT,
-        THREE_OF_KIND,
-        TWO_PAIRS,
+
+        HIGHEST_CARD,
         ONE_PAIR,
-        HIGHEST_CARD
+        TWO_PAIRS,
+        THREE_OF_A_KIND,
+        STRAIGHT,
+        FLUSH,
+        FULL_HOUSE,
+        FOUR_OF_A_KIND,
+        STRAIGHT_FLUSH;
+
+        public String toString() {
+            return name().replace('_', '-').toLowerCase();
+        }
     }
 
     private Card[] cards;
+    private Category category;
 
     public static Card[] stringToCards(String str) {
         List<Card> cards = new ArrayList<Card>(HAND_SIZE);
@@ -87,22 +93,24 @@ public class Hand {
     }
 
     public int[] groupByKind() {
-        Map<Card.FaceValue, Integer> faceValues = new HashMap<Card.FaceValue, Integer>();
+        Multiset<Card.FaceValue> faceValues = TreeMultiset.create();
         for (Card card: cards) {
-            if(!faceValues.containsKey(card.getFaceValue())) {
-                faceValues.put(card.getFaceValue(), 0);
-            }
-            int count = faceValues.get(card.getFaceValue());
-            faceValues.put(card.getFaceValue(), count+1);
+            faceValues.add(card.getFaceValue());
         }
-
-        int[] result = ArrayUtils.toPrimitive(faceValues.values().toArray(new Integer[] {}));
-        Arrays.sort(result);
-        ArrayUtils.reverse(result);
-        return result;
+        List<Integer> result = Lists.newArrayList();
+        for(Multiset.Entry<Card.FaceValue> e: faceValues.entrySet()) {
+            result.add(e.getCount());
+        }
+        return Ints.toArray(Ordering.natural().reverse().sortedCopy(result));
     }
 
-    Category getCategory() {
+    public Category getCategory() {
+        if(category == null)
+            category = evaluateCategory();
+        return category;
+    }
+
+    private Category evaluateCategory() {
         if(isStraight() && isFlush()) {
             return Category.STRAIGHT_FLUSH;
         } else {
@@ -117,7 +125,7 @@ public class Hand {
             } else if(isStraight()) {
                 return Category.STRAIGHT;
             } else if(kindGroups[0] == 3) {
-                return Category.THREE_OF_KIND;
+                return Category.THREE_OF_A_KIND;
             } else if(kindGroups[0] == 2 && kindGroups[1] == 2) {
                 return Category.TWO_PAIRS;
             } else if(kindGroups[0] == 2) {
@@ -133,7 +141,7 @@ public class Hand {
     }
 
     public boolean equals(Object o) {
-        if(!(o instanceof Card))
+        if(!(o instanceof Hand))
             return false;
         Hand hand = (Hand)o;
         return Arrays.equals(this.cards, hand.cards);
@@ -145,5 +153,10 @@ public class Hand {
 
     public String toString() {
         return Joiner.on(' ').join(cards);
+    }
+
+    @Override
+    public int compareTo(Hand hand) {
+        return this.getCategory().compareTo(hand.getCategory());
     }
 }

@@ -50,7 +50,7 @@ public class HandTest {
         assertEquals(Hand.Category.FULL_HOUSE, Hand.valueOf("2H 2S 3H 3S 3C").getCategory());
         assertEquals(Hand.Category.FLUSH, Hand.valueOf("AH 6H 9H 5H 7H").getCategory());
         assertEquals(Hand.Category.STRAIGHT, Hand.valueOf("AC 2D 3S 5S 4D").getCategory());
-        assertEquals(Hand.Category.THREE_OF_KIND, Hand.valueOf("KC 2C TC 2D 2H").getCategory());
+        assertEquals(Hand.Category.THREE_OF_A_KIND, Hand.valueOf("KC 2C TC 2D 2H").getCategory());
         assertEquals(Hand.Category.TWO_PAIRS, Hand.valueOf("QH KS JS JD KD").getCategory());
         assertEquals(Hand.Category.ONE_PAIR, Hand.valueOf("2H TC 4C 9S 9C").getCategory());
         assertEquals(Hand.Category.HIGHEST_CARD, Hand.valueOf("6S KH 9H AD QH").getCategory());
