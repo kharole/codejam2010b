@@ -35,50 +35,9 @@ public class PsychicTest {
         List<Hand> hands = Psychic.getAllHands("TH JH QC QD QS", "QH KH AH 2S 6S");
         int l = 1 << Hand.HAND_SIZE;
         assertEquals(l, hands.size());
-        assertEquals(Hand.valueOf("TH JH QC QD QS"), hands.get(0));
-        assertEquals(Hand.valueOf("TH JH QC QD QH"), hands.get(1));
-        assertEquals(Hand.valueOf("QH KH AH 2S QS"), hands.get(l - 2));
-        assertEquals(Hand.valueOf("QH KH AH 2S 6S"), hands.get(l - 1));
-    }
-
-    @Test
-    public void combinations() {
-        List<Collection<Integer>> combinations = new ArrayList<Collection<Integer>>();
-        for(Collection<Integer> combination: Psychic.combinations(Ints.asList(1, 2, 3, 4, 5), 2)) {
-            combinations.add(combination);
-        }
-
-        assertEquals(10, combinations.size());
-
-        assertTrue(combinations.contains(Ints.asList(1, 2)));
-        assertTrue(combinations.contains(Ints.asList(1, 3)));
-        assertTrue(combinations.contains(Ints.asList(1, 4)));
-        assertTrue(combinations.contains(Ints.asList(1, 5)));
-        assertTrue(combinations.contains(Ints.asList(2, 3)));
-        assertTrue(combinations.contains(Ints.asList(2, 4)));
-        assertTrue(combinations.contains(Ints.asList(2, 5)));
-        assertTrue(combinations.contains(Ints.asList(3, 4)));
-        assertTrue(combinations.contains(Ints.asList(3, 5)));
-        assertTrue(combinations.contains(Ints.asList(4, 5)));
-    }
-
-    @Test
-    public void zeroSizeCombination() {
-        List<Collection<Integer>> combinations = new ArrayList<Collection<Integer>>();
-        for(Collection<Integer> combination: Psychic.combinations(Ints.asList(1, 2, 3, 4, 5), 0)) {
-            combinations.add(combination);
-        }
-        assertEquals(1, combinations.size());
-        assertEquals(0, combinations.get(0).size());
-    }
-
-    @Test
-    public void maxSizeCombination() {
-        List<Collection<Integer>> combinations = new ArrayList<Collection<Integer>>();
-        for(Collection<Integer> combination: Psychic.combinations(Ints.asList(1, 2, 3, 4, 5), 5)) {
-            combinations.add(combination);
-        }
-        assertEquals(1, combinations.size());
-        assertEquals(Ints.asList(1, 2, 3, 4, 5), combinations.get(0));
+        assertTrue(hands.contains(Hand.valueOf("TH JH QC QD QS")));
+        assertTrue(hands.contains(Hand.valueOf("TH JH QC QD QS")));
+        assertTrue(hands.contains(Hand.valueOf("QH KH AH 2S QS")));
+        assertTrue(hands.contains(Hand.valueOf("QH KH AH 2S 6S")));
     }
 }
