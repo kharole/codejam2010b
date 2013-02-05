@@ -4,13 +4,6 @@ import com.google.common.collect.*;
 
 import java.util.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Admin
- * Date: 31.01.13
- * Time: 22:35
- * To change this template use File | Settings | File Templates.
- */
 public class Psychic {
 
     public static String analyze(String str) {

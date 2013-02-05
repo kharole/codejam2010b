@@ -10,13 +10,6 @@ import java.util.*;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Admin
- * Date: 31.01.13
- * Time: 23:18
- * To change this template use File | Settings | File Templates.
- */
 public class Hand implements Comparable<Hand> {
 
     public static final int HAND_SIZE = 5;

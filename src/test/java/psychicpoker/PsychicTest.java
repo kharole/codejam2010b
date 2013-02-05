@@ -8,13 +8,6 @@ import java.util.*;
 import static junit.framework.Assert.*;
 import static junit.framework.Assert.assertEquals;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Admin
- * Date: 03.02.13
- * Time: 11:40
- * To change this template use File | Settings | File Templates.
- */
 public class PsychicTest {
 
     @Test

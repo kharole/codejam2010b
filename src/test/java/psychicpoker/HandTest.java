@@ -5,14 +5,6 @@ import org.junit.Test;
 
 import static junit.framework.Assert.*;
 
-
-/**
- * Created with IntelliJ IDEA.
- * User: Admin
- * Date: 31.01.13
- * Time: 23:21
- * To change this template use File | Settings | File Templates.
- */
 public class HandTest {
 
     @Test(expected = IllegalArgumentException.class)

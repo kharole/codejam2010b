@@ -5,13 +5,6 @@ import com.google.common.collect.ComparisonChain;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Admin
- * Date: 31.01.13
- * Time: 22:37
- * To change this template use File | Settings | File Templates.
- */
 public class Card implements Comparable<Card> {
 
     enum FaceValue {
