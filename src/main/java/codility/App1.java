@@ -10,6 +10,7 @@ import java.util.List;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.cbrt;
+import static java.lang.Math.scalb;
 
 /**
  * Hello world!
@@ -106,6 +107,29 @@ public class App1 {
             result++;
         }
 
+        return result;
+    }
+
+    public static int maxSubSeq2(int[] a) {
+        int[] s = new int[a.length];
+        s[0] = a[0];
+        for(int k=0; k<a.length-1; k++) {
+            s[k+1] = Math.max(s[k] + a[k+1], a[k+1]);
+        }
+        Arrays.sort(s);
+        return s[a.length-1];
+    }
+
+    public static int maxSubSeq(int[] a) {
+        int result = a[0];
+        for(int i=0; i<a.length; i++) {
+            int s = 0;
+            for(int j=i; j<a.length; j++) {
+                s += a[j];
+                if(s > result)
+                    result = s;
+            }
+        }
         return result;
     }
 
